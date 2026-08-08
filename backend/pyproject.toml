@@ -1,0 +1,17 @@
+[project]
+name = "oreo-backend"
+version = "0.1.0"
+description = "Oreo personal AI assistant — backend (FastAPI gateway, STT, memory, reasoning agent, TTS)"
+requires-python = ">=3.11"
+readme = "README.md"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+
+[tool.setuptools.packages.find]
+include = ["app*"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"

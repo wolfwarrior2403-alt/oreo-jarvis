@@ -1,0 +1,40 @@
+# Deployment Option B (containerized backend, section 5).
+#
+# Usage:
+#   cp .env.example .env   # fill in real secrets first
+#   docker compose up -d
+#   docker compose exec ollama ollama pull llama3.2   # first run only
+#
+# For Option A (personal/local), just run the backend with uvicorn directly
+# (see README) and skip Docker/Ollama-in-a-container entirely.
+
+services:
+  backend:
+    build: .
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - DATABASE_URL=sqlite:///./data/oreo.db
+      - CHROMA_PERSIST_DIR=./data/chroma
+    volumes:
+      - oreo_data:/app/data
+    depends_on:
+      - ollama
+    restart: unless-stopped
+
+  # Optional: comment this whole service out (and OLLAMA_BASE_URL above) if
+  # you'd rather point at an Ollama instance running on the host/elsewhere.
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_models:/root/.ollama
+    restart: unless-stopped
+
+volumes:
+  oreo_data:
+  ollama_models:
